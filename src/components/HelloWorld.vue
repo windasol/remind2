@@ -1,37 +1,44 @@
 <template>
-  <p v-if="!startFlag" class="title">기억력 테스트</p>
- <div class="stage" id="stage">  
-  <Transition name="fade">
-    <p v-if="show">{{data}}</p>    
-  </Transition>  
- </div> 
- 
-  <div v-if="endFlag">
-    <input v-for="(row, idx) in stage.length" :key="row" v-model="inputData[idx]" class="input">
-  </div>  
-  <div v-if="answerCheck">
-    <input v-for="(row, idx) in stage.length" :key="row" v-model="stage[idx]" class="input">
-  </div>  
-
-
- <div v-if="!endFlag && !startFlag">
-  <button class="btnStart" @click="init">테스트 시작</button>
-  <select v-model="level" class="button">
-   <option v-for="value in 10" :value="value" :key="value">LEVEL {{ value }}</option>
-  </select>
-  <select v-model="time" class="button">
-   <option v-for="value in 20" :value="value / 10" :key="value">{{ value / 10 }} 초</option>   
-  </select>  
-</div>
-<div v-if="endFlag">
-  <button class="btnStart" @click="check" style="background-color: orange;">검사하기</button>
-  <button class="btnStart" @click="answerCheck= !answerCheck" style="background-color: red;">정답 확인하기</button>
-  <button class="btnStart" @click="reset" style="background-color: green;">처음으로</button>
-</div>
+  <div v-if="!change">
+    <p v-if="!startFlag" class="title">기억력 테스트</p>
+    <div class="stage" id="stage">  
+      <Transition name="fade">
+        <p v-if="show">{{data}}</p>    
+      </Transition>  
+    </div> 
+   
+    <div v-if="endFlag">
+      <input v-for="(row, idx) in stage.length" :key="row" v-model="inputData[idx]" class="input">
+    </div>  
+    <div v-if="answerCheck">
+      <input v-for="(row, idx) in stage.length" :key="row" v-model="stage[idx]" class="input">
+    </div>  
   
+  
+    <div v-if="!endFlag && !startFlag">
+      <button class="btnStart" @click="init">테스트 시작</button>
+      <select v-model="level" class="button">
+        <option v-for="value in 10" :value="value" :key="value">LEVEL {{ value }}</option>
+      </select>
+      <select v-model="time" class="button">
+        <option v-for="value in 20" :value="value / 10" :key="value">{{ value / 10 }} 초</option>   
+      </select>   
+      <button class="btnStart" @click="changeRouter" style="background-color: blueviolet;">다른버전</button>         
+    </div>
+    <div v-if="endFlag">
+      <button class="btnStart" @click="check" style="background-color: orange;">검사하기</button>
+      <button class="btnStart" @click="answerCheck= !answerCheck" style="background-color: red;">정답 확인하기</button>
+      <button class="btnStart" @click="reset" style="background-color: green;">처음으로</button>
+    </div>
+  </div>
+
+  <!-- <div>
+    <router-view v-if="change"/>
+  </div> -->
 </template>
 
 <script>
+
 export default {
   data() {
     return {
@@ -44,6 +51,7 @@ export default {
       endFlag: false, 
       inputData: [],
       answerCheck: false,
+      change: false,
     };
   },
   mounted() {    
@@ -101,6 +109,9 @@ export default {
       this.answerCheck = false;
       this.inputData = [];
     },
+    changeRouter() {
+      this.$router.push( { name: "change" });
+    }
   },
 }
 </script>
