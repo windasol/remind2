@@ -98,6 +98,7 @@ export default {
     reset() {
       this.endFlag = false;
       this.startFlag = false;
+      this.answerCheck = false;
       this.inputData = [];
     },
   },
