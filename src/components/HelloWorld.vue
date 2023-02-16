@@ -1,58 +1,144 @@
 <template>
-  <div class="hello">
-    <h1>{{ msg }}</h1>
-    <p>
-      For a guide and recipes on how to configure / customize this project,<br>
-      check out the
-      <a href="https://cli.vuejs.org" target="_blank" rel="noopener">vue-cli documentation</a>.
-    </p>
-    <h3>Installed CLI Plugins</h3>
-    <ul>
-      <li><a href="https://github.com/vuejs/vue-cli/tree/dev/packages/%40vue/cli-plugin-babel" target="_blank" rel="noopener">babel</a></li>
-      <li><a href="https://github.com/vuejs/vue-cli/tree/dev/packages/%40vue/cli-plugin-eslint" target="_blank" rel="noopener">eslint</a></li>
-    </ul>
-    <h3>Essential Links</h3>
-    <ul>
-      <li><a href="https://vuejs.org" target="_blank" rel="noopener">Core Docs</a></li>
-      <li><a href="https://forum.vuejs.org" target="_blank" rel="noopener">Forum</a></li>
-      <li><a href="https://chat.vuejs.org" target="_blank" rel="noopener">Community Chat</a></li>
-      <li><a href="https://twitter.com/vuejs" target="_blank" rel="noopener">Twitter</a></li>
-      <li><a href="https://news.vuejs.org" target="_blank" rel="noopener">News</a></li>
-    </ul>
-    <h3>Ecosystem</h3>
-    <ul>
-      <li><a href="https://router.vuejs.org" target="_blank" rel="noopener">vue-router</a></li>
-      <li><a href="https://vuex.vuejs.org" target="_blank" rel="noopener">vuex</a></li>
-      <li><a href="https://github.com/vuejs/vue-devtools#vue-devtools" target="_blank" rel="noopener">vue-devtools</a></li>
-      <li><a href="https://vue-loader.vuejs.org" target="_blank" rel="noopener">vue-loader</a></li>
-      <li><a href="https://github.com/vuejs/awesome-vue" target="_blank" rel="noopener">awesome-vue</a></li>
-    </ul>
-  </div>
+  <p v-if="!startFlag" class="title">기억력 테스트</p>
+ <div class="stage" id="stage">  
+  <Transition name="fade">
+    <p v-if="show">{{data}}</p>    
+  </Transition>  
+ </div> 
+ 
+  <div v-if="endFlag">
+    <input v-for="(row, idx) in stage.length" :key="row" v-model="inputData[idx]" class="input">
+  </div>  
+  <div v-if="answerCheck">
+    <input v-for="(row, idx) in stage.length" :key="row" v-model="stage[idx]" class="input">
+  </div>  
+
+
+ <div v-if="!endFlag && !startFlag">
+  <button class="btnStart" @click="init">테스트 시작</button>
+  <select v-model="level" class="button">
+   <option v-for="value in 10" :value="value" :key="value">LEVEL {{ value }}</option>
+  </select>
+  <select v-model="time" class="button">
+   <option v-for="value in 20" :value="value / 10" :key="value">{{ value / 10 }} 초</option>   
+  </select>  
+</div>
+<div v-if="endFlag">
+  <button class="btnStart" @click="check" style="background-color: orange;">검사하기</button>
+  <button class="btnStart" @click="answerCheck= !answerCheck" style="background-color: red;">정답 확인하기</button>
+  <button class="btnStart" @click="reset" style="background-color: green;">처음으로</button>
+</div>
+  
 </template>
 
 <script>
 export default {
-  name: 'HelloWorld',
-  props: {
-    msg: String
-  }
+  data() {
+    return {
+      stage: [],
+      level: 1,
+      time: 0.1,
+      data: "",
+      show: true,   
+      startFlag: false,  
+      endFlag: false, 
+      inputData: [],
+      answerCheck: false,
+    };
+  },
+  mounted() {    
+  },
+  methods: {
+    init() {
+      this.startFlag = true;
+      this.stage = [];
+      this.inputData = [];
+      let random = [];
+      let length = this.level + 3;
+      random = Array.from({ length: 26 }, (v, i) => String.fromCharCode(i + 65));
+      for(let i = 1; i < 10; i++) {
+        random.push(i);
+      }
+            
+      for(let i = 0; i < length; i++) {
+        let num = Math.floor(Math.random() * 35);
+        this.stage.push(random[num].toString());
+        this.inputData.push("");
+      }
+
+      console.log(this.stage);
+
+      this.bind();
+
+    },
+    async bind() {                        
+      for(let i = 0; i < this.stage.length; i++) {        
+        this.data = this.stage[i];        
+        this.show = true;    
+        await this.delay(this.time * 1000);
+        this.show = false;        
+        await this.delay(this.time * 1000);        
+      }      
+
+      this.startFlag = false;
+      this.endFlag = true;
+    },
+    delay(ms) {                  
+      return new Promise(r => setTimeout(r,ms));
+    }, 
+    check() {
+      let count = 0;
+      this.stage.forEach((e,i)=> {        
+        if(e == this.inputData[i]) {
+          count++;
+        }        
+      });
+      alert(count + "개 맞추었습니다");      
+    },
+    reset() {
+      this.endFlag = false;
+      this.startFlag = false;
+      this.inputData = [];
+    },
+  },
 }
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-h3 {
-  margin: 40px 0 0;
+.stage {
+  color: black;
+  font-size: 120px;  
 }
-ul {
-  list-style-type: none;
-  padding: 0;
+
+.fade-enter-active, .fade-leave-active {
+  transition: opacity 1s;
 }
-li {
-  display: inline-block;
-  margin: 0 10px;
+.fade-enter, .fade-leave-to /* .fade-leave-active below version 2.1.8 */ {
+  opacity: 0;
 }
-a {
-  color: #42b983;
+
+.btnStart {
+  height: 50px; 
+  font-weight: 500; 
+  background-color: #00A5FF;
+  border: solid white;  
+  margin: 1.5em;
+  color: white;
+  font-size: 13px;
 }
+
+.input {
+  width: 50px; 
+  height: 30px; 
+  align-items: center;
+}
+.button {
+  margin: 1.5em;
+}
+
+.title {
+  font-size: 40px
+}
+
 </style>
