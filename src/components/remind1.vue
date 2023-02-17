@@ -183,7 +183,7 @@ export default {
 
 .btnStart {
   height: 50px; 
-  width: 100px;
+  width: 80px;
   font-weight: 500; 
   background-color: #00A5FF;
   border: solid white;  
