@@ -17,7 +17,7 @@
     <div v-if="!endFlag && !startFlag">
       <button class="btnStart" @click="init">테스트 시작</button>     
     </div>
-    <div>
+    <div v-if="!endFlag && !startFlag">
       <select @change="changeRouter($event)">
         <option v-for="data in combo" :value="data.value" :key="data">{{ data.description }}</option>   
       </select>   
@@ -34,7 +34,7 @@
       <button class="btnStart" @click="reset" style="background-color: green;">처음으로</button>
     </div>  
   
-    <div>
+    <div v-if="!endFlag && !startFlag">
       <button class="btnStart" @click="song" style="background-color: slateblue">힐링 음악</button>  
       <button class="btnStart" @click="songPasue" style="background-color: steelblue">중지</button>  
     </div>

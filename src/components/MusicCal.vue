@@ -21,8 +21,8 @@
     </div>
         
     <div>
-        <button v-if="!endFlag" class="btnStart" @click="check" style="background-color: green;">검사하기</button>
         <button v-if="!endFlag" class="btnStart" @click="init" style="background-color: orange;">시작하기</button>    
+        <button v-if="!endFlag" class="btnStart" @click="check" style="background-color: green;">검사하기</button>
         <button v-if="!endFlag" class="btnStart" @click="answerCheck" style="background-color: red;">정답 확인하기</button>
     </div>
 
@@ -58,6 +58,9 @@ export default {
     methods: {
         async init() {
             this.endFlag = true;
+            this.inputResult = "" ;
+            this.inputBitReuslt = "";
+            this.bitResult = 0;
             this.num = Math.floor((Math.random() * (100 - 10))) + 10;
             this.num1 = Math.floor((Math.random() * (100 - 10))) + 10;                                    
             this.reuslt = this.num * this.num1;
