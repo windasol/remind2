@@ -20,16 +20,23 @@
             </tbody>
         </table>  
     </div>
-    <div class="bottom-title">
-        <button class="btnStart" @click="check" style="background-color: orange;">검사</button>
-        <button class="btnStart" @click="start">시작</button>
-        <button class="btnStart" @click="changeRouter" style="background-color: blueviolet;">다른버전</button>        
-        <select v-model="select" >
-            <option v-for="x in 10" :key="x" :value="x * 1000">{{ x }}초</option>
-        </select>
-        <select v-model="level" @change="reset">
-            <option v-for="x in 5" :key="x" :value="x ">LEVEL {{ x }} </option>
-        </select>
+    <div>
+        <div class="bottom-top">
+            <select @change="changeRouter($event)" style="margin-right: 1em;">
+                <option v-for="data in combo" :value="data.value" :key="data" >{{ data.description }}</option>   
+            </select>     
+            <select v-model="select" style="margin-right: 1em;">
+                <option v-for="x in 10" :key="x" :value="x * 1000">{{ x }}초</option>
+            </select>
+            <select v-model="level" @change="reset">
+                <option v-for="x in 5" :key="x" :value="x ">LEVEL {{ x }} </option>
+            </select>
+        </div>
+        
+        <div class="bottom-title">
+            <button class="btnStart" @click="check" style="background-color: orange;">검사</button>
+            <button class="btnStart" @click="start">시작</button>
+        </div>
     </div>
     
 </template>
@@ -38,7 +45,7 @@
 export default {
     name: 'HelloWorld',
     props: {
-    msg: String
+        msg: String
     },
     data()  {
         return {
@@ -48,28 +55,30 @@ export default {
             select: 1000, 
             level: 1,     
             change: false,
-            };
-        },
-        computed: {
-        
-        },
-        mounted() {
+            combo: [
+                {value: "/version2", description: "version 2"},
+                {value: "/", description: "version 1"},                                                
+                {value: "/version3", description: "version 3"}
+            ]   
+        };
+    },
+    mounted() {
         this.init();    
-        },
-        methods: {
+    },
+    methods: {
         async init() {      
             await this.randoms();
-            await this.delay(Number(this.select));
-            for(let i = 1; i <=25; i++) {
-            this.colorChange(i.toString(), "black");        
-            }
-            
+            await this.delay(Number(this.select));        
+            for(let i = 1; i <= this.level * 5; i++) {
+                this.colorChange(i.toString(), "black");        
+            }   
+
         },
-        randoms() {
-            for(let i = 0; i < 25; i++) {
-            let num = Math.floor(Math.random() * 35);
-            this.data.push(this.random[num]);
-            this.inputData.push("");
+        randoms() {        
+            for(let i = 1; i <= this.level * 5; i++) {
+                let num = Math.floor(Math.random() * 35);
+                this.data.push(this.random[num]);
+                this.inputData.push("");
             }      
         },
         delay(ms) {                  
@@ -83,7 +92,7 @@ export default {
             }
             });
             alert(count + "개 맞추셧습니다");
-            for(let i = 0; i < this.data.length; i++) {
+            for(let i = 0; i <= (this.level * 5) - 1; i++) {
             let color = "white";
             if(this.data[i] == this.inputData[i]) {
                 color = "green";
@@ -93,9 +102,9 @@ export default {
             }   
         },
         start() {      
-            this.data.forEach((e,i)=> {
-            this.colorChange((i + 1).toString(), "white");
-            });      
+            for(let i = 1; i <= this.level * 5; i++) {
+                this.colorChange(i.toString(), "white");
+            }            
             this.data = [];
             this.inputData = [];
             this.init();
@@ -104,12 +113,12 @@ export default {
             document.getElementById(id).style.backgroundColor = color;    
         },
         reset() {            
-            for(let i = 0; i < 25; i++) {
-                this.colorChange((i + 1).toString(), "black");   
+            for(let i = 1; i <= this.level * 5; i++) {
+                this.colorChange(i.toString(), "black");   
             }
         },
-        changeRouter() {
-            this.$router.push( { name: "HelloWorld" });
+        changeRouter(event) {
+            this.$router.push( { path: event.target.value });
         },
     },
 }
@@ -168,11 +177,13 @@ export default {
 }
 .bottom-title {
     margin-left: 3em;
-    margin-top: 1em;
+    margin-top: 1em;    
+    margin-right: 2em;
 }
 
 .btnStart {
   height: 50px; 
+  width: 100px;
   font-weight: 500; 
   background-color: #00A5FF;
   border: solid white;  
@@ -185,5 +196,9 @@ export default {
     border: white;
     width: 20px;
     height: 20px;
+}
+
+.bottom-top {
+    margin-top: 5em;
 }
 </style>

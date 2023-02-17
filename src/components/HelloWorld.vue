@@ -1,5 +1,4 @@
-<template>
-  <div v-if="!change">
+<template>  
     <p v-if="!startFlag" class="title">기억력 테스트</p>
     <div class="stage" id="stage">  
       <Transition name="fade">
@@ -16,30 +15,43 @@
   
   
     <div v-if="!endFlag && !startFlag">
-      <button class="btnStart" @click="init">테스트 시작</button>
+      <button class="btnStart" @click="init">테스트 시작</button>     
+    </div>
+    <div>
+      <select @change="changeRouter($event)">
+        <option v-for="data in combo" :value="data.value" :key="data">{{ data.description }}</option>   
+      </select>   
       <select v-model="level" class="button">
         <option v-for="value in 10" :value="value" :key="value">LEVEL {{ value }}</option>
       </select>
       <select v-model="time" class="button">
         <option v-for="value in 20" :value="value / 10" :key="value">{{ value / 10 }} 초</option>   
       </select>   
-      <button class="btnStart" @click="changeRouter" style="background-color: blueviolet;">다른버전</button>         
     </div>
     <div v-if="endFlag">
       <button class="btnStart" @click="check" style="background-color: orange;">검사하기</button>
       <button class="btnStart" @click="answerCheck= !answerCheck" style="background-color: red;">정답 확인하기</button>
       <button class="btnStart" @click="reset" style="background-color: green;">처음으로</button>
+    </div>  
+  
+    <div>
+      <button class="btnStart" @click="song" style="background-color: slateblue">힐링 음악</button>  
+      <button class="btnStart" @click="songPasue" style="background-color: steelblue">중지</button>  
     </div>
-  </div>
 
-  <!-- <div>
-    <router-view v-if="change"/>
-  </div> -->
+    <audio class="player" ref="player">
+        <source src="../music/song1.mp3" ref="source"> 
+    </audio>
+    
 </template>
+
 
 <script>
 
 export default {
+  components: {  
+    
+  },
   data() {
     return {
       stage: [],
@@ -50,8 +62,12 @@ export default {
       startFlag: false,  
       endFlag: false, 
       inputData: [],
-      answerCheck: false,
-      change: false,
+      answerCheck: false,  
+      combo: [
+        {value: "/", description: "version 1"},
+        {value: "/version2", description: "version 2"},
+        {value: "/version3", description: "version 3"}
+      ]      
     };
   },
   mounted() {    
@@ -109,10 +125,18 @@ export default {
       this.answerCheck = false;
       this.inputData = [];
     },
-    changeRouter() {
-      this.$router.push( { name: "change" });
+    changeRouter(event) {                  
+      this.$router.push( { path : event.target.value });
+    },
+    song() {
+      const sound = this.$refs.player;                    
+      sound.play(); 
+    },
+    songPasue() {
+      const sound = this.$refs.player;                    
+      sound.pause();                               
     }
-  },
+  },  
 }
 </script>
 
@@ -154,3 +178,4 @@ export default {
 }
 
 </style>
+
