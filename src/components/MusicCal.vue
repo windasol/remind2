@@ -63,26 +63,33 @@ export default {
             this.bitResult = 0;
             this.num = Math.floor((Math.random() * (100 - 10))) + 10;
             this.num1 = Math.floor((Math.random() * (100 - 10))) + 10;                                    
+            let range = Math.floor((Math.random() * (12 - 3))) + 3;                                    
             this.reuslt = this.num * this.num1;
             
-            const currentTime = new Date();	          
-            let flag = true;
+            // const currentTime = new Date();	          
+            // let flag = true;
 
-            while(flag) {
-                const oldTime = new Date();
+            // while(flag) {
+            //     const oldTime = new Date();
                 
-                const diff = currentTime - oldTime;        
-                const sec = Math.floor(diff / 1000);              
-                if(sec < -8) {
-                    flag = false;                    
-                    break;                    
-                }        
+            //     const diff = currentTime - oldTime;        
+            //     const sec = Math.floor(diff / 1000);              
+            //     if(sec < -10) {
+            //         flag = false;                    
+            //         break;                    
+            //     }        
 
-                this.sound();          
-                let timeNum = Math.floor(Math.random() * (2500 - 1000)) + 1000;
-                await this.delay(timeNum);
+            //     this.sound();          
+            //     await this.delay(800);
+            // }
+
+            for(let i = 1; i <= range; i++) {
+                this.sound();
+                await this.delay(850)
             }
             
+
+
             await this.end();
         },
         changeRouter(event) {                  
