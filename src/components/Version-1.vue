@@ -35,12 +35,12 @@
     </div>  
   
     <div v-if="!endFlag && !startFlag">
-      <button class="btnStart" @click="song" style="background-color: slateblue">힐링 음악</button>  
-      <button class="btnStart" @click="songPasue" style="background-color: steelblue">중지</button>  
+      <button class="btnStart" @click="song" style="background-color: slateblue">BGM 시작</button>  
+      <button class="btnStart" @click="songPasue" style="background-color: steelblue">BGM 중지</button>  
     </div>
 
     <audio class="player" ref="player">
-        <source src="../music/song1.mp3" ref="source"> 
+        <source src="../music/리스항구.mp3" ref="source"> 
     </audio>
     
 </template>
@@ -129,11 +129,12 @@ export default {
       this.$router.push( { path : event.target.value });
     },
     song() {
-      const sound = this.$refs.player;                    
+      const sound = this.$refs.player;                     
       sound.play(); 
     },
     songPasue() {
-      const sound = this.$refs.player;                    
+      const sound = this.$refs.player;             
+      console.log(this.$refs.source.src)       
       sound.pause();                               
     }
   },  
@@ -162,6 +163,7 @@ export default {
   margin: 1.5em;
   color: white;
   font-size: 13px;
+  cursor: pointer;
 }
 
 .input {
