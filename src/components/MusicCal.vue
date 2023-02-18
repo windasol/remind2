@@ -1,6 +1,6 @@
 <template>
     <h1>청각 암산테스트</h1>
-    <div class="number">
+    <div class="number" v-if="startFlag">
         <div style="margin-left: 0.8em;">{{ num }}</div>
         <div>x {{ num1 }}</div>
     </div>        
@@ -52,15 +52,14 @@ export default {
             {value: "/", description: "version 1"},
             {value: "/version2", description: "version 2"},        
         ],  
-        endFlag: false,              
+        endFlag: false,  
+        startFlag: true,            
       };
     },    
     methods: {
         async init() {
-            this.endFlag = true;
-            this.inputResult = "" ;
-            this.inputBitReuslt = "";
-            this.bitResult = 0;
+            this.reset();
+
             this.num = Math.floor((Math.random() * (100 - 10))) + 10;
             this.num1 = Math.floor((Math.random() * (100 - 10))) + 10;                                    
             let range = Math.floor((Math.random() * (12 - 3))) + 3;                                    
@@ -125,13 +124,15 @@ export default {
             const sound = this.$refs.player;                    
             sound.pause();                       
             sound.currentTime = 0;     
-            this.endFlag = false;         
+            this.endFlag = false;     
+            this.startFlag = false;    
         },
         reset() {                   
+            this.endFlag = true;
             this.inputResult = "" ;
             this.inputBitReuslt = "";
             this.bitResult = 0;
-            this.init();
+            this.startFlag = true;
         },
         answerCheck() {
             alert("계산 결과 : " + this.reuslt + "  " + "기계음 개수 : " + this.bitResult);
