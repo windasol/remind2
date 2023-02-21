@@ -7,7 +7,7 @@
     </div> 
    
     <div v-if="endFlag">
-      <input v-for="(row, idx) in stage.length" :key="row" v-model="inputData[idx]" class="input">
+      <input v-for="(row, idx) in stage.length" :key="row" v-model="inputData[idx]" class="input" @input="moveFoucs">
     </div>  
     <div v-if="answerCheck">
       <input v-for="(row, idx) in stage.length" :key="row" v-model="stage[idx]" class="input">
@@ -136,7 +136,10 @@ export default {
       const sound = this.$refs.player;             
       console.log(this.$refs.source.src)       
       sound.pause();                               
-    }
+    },
+    moveFoucs(e) {      
+      e?.target?.nextSibling?.focus();
+    },
   },  
 }
 </script>

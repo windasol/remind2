@@ -1,7 +1,7 @@
 <template>  
     <h1>순간기억력 테스트</h1>
     <div class="title">
-        <table class="stage_container" style="width: 25%; margin-left: 1em;">
+        <table class="stage_container" style="margin-left: 1em;">
             <tbody class="stage">
                 <tr v-for="(y, idx) in level" :key="`y-${idx}`">
                     <td v-for="(x, index) in 5" :key="`x-${index}`" :id="`${x + (5 * (y -1))}`" class="check" >
@@ -10,12 +10,10 @@
                 </tr>
             </tbody>
         </table>  
-        <table class="stage_container" style="width: 20%; margin-left: 1em;">
-            <tbody class="input">
-                <tr v-for="(y, idx) in level" :key="`y-${idx}`">
-                    <td v-for="(x, index) in 5" :key="`x-${index}`" class="check">
-                        <input v-model="inputData[x + (5 * (y -1)) - 1]" class="input2"/>
-                    </td>
+        <table class="stage_container" style="margin-left: 1em;">
+            <tbody >
+                <tr v-for="(y, idx) in level" :key="`y-${idx}`">    
+                    <input v-for="(x, index) in 5" :key="`x-${index}`" class="input" v-model="inputData[x + (5 * (y -1)) - 1]" @input="moveFoucs(e, ((y-1) * 5) + x)" maxlength="1" :ref="`key-${((y-1) * 5) + x}`" />                    
                 </tr>
             </tbody>
         </table>  
@@ -120,6 +118,10 @@ export default {
         changeRouter(event) {
             this.$router.push( { path: event.target.value });
         },
+        moveFoucs(e,idx) {     
+            const next = "key-" +  (idx + 1);                        
+            this.$refs[next][0].focus();                 
+        },
     },
 }
 </script>
@@ -146,19 +148,10 @@ export default {
     outline: 1px solid black;
 }
 .input {
-    margin: 0 auto;
-    outline: 2px solid black;
-    background-color: white;
-}
-.input > tr {
-    width: 100%;
-    height: 25px;
-}
-.input > tr > td {
     width: 25px;
     height: 25px;
-    outline: 1px solid black;
 }
+
 .check {
     width: 20px;
     height: 20px; 
